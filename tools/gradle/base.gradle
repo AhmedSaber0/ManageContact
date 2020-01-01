@@ -1,0 +1,63 @@
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'realm-android'
+
+android {
+
+    compileSdkVersion deps.build.compileSdkVersion
+
+    defaultConfig {
+
+        minSdkVersion deps.build.minSdkVersion
+        targetSdkVersion deps.build.targetSdkVersion
+        versionCode deps.build.versionCode
+        versionName deps.build.versionName
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    //UI
+    implementation deps.support.design
+    implementation deps.support.recyclerview
+    implementation deps.support.constraintLayout
+
+    // Arch Component
+    implementation deps.architecturecomponents.lifecycles
+
+    // corountines
+    implementation deps.corountines.corountinesCore
+    implementation deps.corountines.corountinesAndroid
+
+    // Log
+    implementation deps.log.timber
+
+    api deps.kotlin.kotlin
+    api deps.kotlin.kotlinCore
+
+    // Testing
+    testImplementation deps.test.junit
+    androidTestImplementation deps.test.runner
+    androidTestImplementation deps.test.espresso
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    configurations.all {
+        resolutionStrategy {
+            force deps.support.annotations
+        }
+        resolutionStrategy.eachDependency { details ->
+            if (details.requested.group == 'com.android.support'
+                    && !details.requested.name.contains('multidex')) {
+                details.useVersion deps.versions.support
+            }
+        }
+    }
+}

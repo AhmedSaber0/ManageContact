@@ -1,0 +1,2 @@
+include ':app', ':models', ':feature:contact', ':datastore:local', ':presentation:contactpresentation'
+rootProject.name='ManageContacts'
