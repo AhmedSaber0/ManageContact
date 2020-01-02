@@ -29,9 +29,12 @@ dependencies {
     implementation deps.support.design
     implementation deps.support.recyclerview
     implementation deps.support.constraintLayout
+    implementation deps.support.multidex
 
     // Arch Component
     implementation deps.architecturecomponents.lifecycles
+    implementation deps.architecturecomponents.viewmodel
+    implementation deps.architecturecomponents.livedata
 
     // corountines
     implementation deps.corountines.corountinesCore

@@ -1,3 +1,7 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="margin_normal">16dp</dimen>
+    <dimen name="padding_normal">16dp</dimen>
+    <dimen name="header">16sp</dimen>
+    <dimen name="sub_header">14sp</dimen>
 </resources>
