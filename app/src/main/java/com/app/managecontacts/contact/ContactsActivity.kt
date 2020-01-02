@@ -1,7 +1,6 @@
-package com.app.managecontacts
+package com.app.managecontacts.contact
 
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.lifecycle.Observer
@@ -10,21 +9,23 @@ import com.app.contact.repository.ContactRepository
 import com.app.contact.usecase.ContactUseCase
 import com.app.contactpresentation.ContactViewModel
 import com.app.local.ContactDaoImpl
+import com.app.managecontacts.R
 import com.app.managecontacts.base.BaseActivity
 import com.app.managecontacts.databinding.ActivityMainBinding
-import com.app.models.local.ContactLocal
 import com.google.android.material.snackbar.Snackbar
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : BaseActivity<ActivityMainBinding>() {
+class ContactsActivity : BaseActivity<ActivityMainBinding>() {
 
     lateinit var contactViewModel: ContactViewModel
+    lateinit var contactAdapter: ContactAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setSupportActionBar(toolbar)
 
+        setupRecyclerView()
         val uiMapper = com.app.contactpresentation.mapper.ContactMapper()
         val entityMapper = ContactMapper()
         val contactDao = ContactDaoImpl(Realm.getDefaultInstance())
@@ -33,17 +34,20 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         contactViewModel = ContactViewModel(contactUseCase, uiMapper)
 
 
-        contactViewModel.addContact(ContactLocal("Ahmed", "0101645151"))
+//        contactViewModel.addContact(ContactLocal("Ahmed", "0101645151"))
         contactViewModel.getAllContacts().observe(this, Observer {
-            for (contact in it) {
-                Log.w("looooog", contact.name)
-                Log.w("looooog", contact.mobile)
-            }
+            contactAdapter.swapData(it)
         })
+
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
         }
+    }
+
+    private fun setupRecyclerView() {
+        contactAdapter = ContactAdapter()
+        mViewDataBinding.mainLayout.recyclerView.adapter = contactAdapter
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

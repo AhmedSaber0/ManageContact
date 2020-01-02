@@ -1,21 +1,20 @@
 package com.app.local
 
-import androidx.lifecycle.LiveData
-import com.app.local.utils.asLiveData
+import com.app.local.utils.await
 import com.app.models.local.ContactLocal
 import io.realm.Realm
 import io.realm.RealmResults
 
 
 class ContactDaoImpl(private val realm: Realm) : ContactDao {
-    override fun addContact(contactLocal: ContactLocal) {
-        realm.executeTransactionAsync {
+    override suspend fun addContact(contactLocal: ContactLocal) {
+        Realm.getDefaultInstance().executeTransactionAsync {
             it.insert(contactLocal)
         }
     }
 
-    override fun deleteContact(contactLocal: ContactLocal) {
-        realm.executeTransactionAsync {
+    override suspend fun deleteContact(contactLocal: ContactLocal) {
+        Realm.getDefaultInstance().executeTransactionAsync {
             val result: RealmResults<ContactLocal> =
                 it.where(ContactLocal::class.java).equalTo("mobile", contactLocal.mobile)
                     .findAll()
@@ -23,8 +22,7 @@ class ContactDaoImpl(private val realm: Realm) : ContactDao {
         }
     }
 
-    override fun getAllContacts():
-            LiveData<RealmResults<ContactLocal>> {
-        return realm.where(ContactLocal::class.java).findAll().asLiveData()
+    override suspend fun getAllContacts(): RealmResults<ContactLocal> {
+        return Realm.getDefaultInstance().where(ContactLocal::class.java).await()
     }
 }
