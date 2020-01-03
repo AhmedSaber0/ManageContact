@@ -2,6 +2,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'realm-android'
+apply plugin: "androidx.navigation.safeargs.kotlin"
 
 android {
 
@@ -35,10 +36,16 @@ dependencies {
     implementation deps.architecturecomponents.lifecycles
     implementation deps.architecturecomponents.viewmodel
     implementation deps.architecturecomponents.livedata
+    implementation deps.architecturecomponents.navigationFragment
+    implementation deps.architecturecomponents.navigationUi
 
     // corountines
     implementation deps.corountines.corountinesCore
     implementation deps.corountines.corountinesAndroid
+
+    //koin
+    implementation deps.koin.koinAndroid
+    implementation deps.koin.koinViewModel
 
     // Log
     implementation deps.log.timber

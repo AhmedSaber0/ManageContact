@@ -1,4 +1,4 @@
-package com.app.local
+package com.app.local.contact
 
 import com.app.local.utils.await
 import com.app.models.local.ContactLocal
@@ -7,7 +7,7 @@ import io.realm.RealmResults
 
 
 class ContactDaoImpl(private val realm: Realm) : ContactDao {
-    override suspend fun addContact(contactLocal: ContactLocal) {
+    override  fun addContact(contactLocal: ContactLocal) {
         Realm.getDefaultInstance().executeTransactionAsync {
             it.insert(contactLocal)
         }

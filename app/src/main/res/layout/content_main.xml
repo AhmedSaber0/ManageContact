@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context=".contact.ContactsActivity"
+        tools:context=".ContactsActivity"
         tools:showIn="@layout/activity_main">
 
         <androidx.recyclerview.widget.RecyclerView

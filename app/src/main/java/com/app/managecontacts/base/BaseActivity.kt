@@ -10,6 +10,7 @@ import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.navigation.Navigation.findNavController
 
 abstract class BaseActivity<T : ViewDataBinding> : AppCompatActivity() {
 
@@ -53,5 +54,4 @@ abstract class BaseActivity<T : ViewDataBinding> : AppCompatActivity() {
             imm.hideSoftInputFromWindow(view.windowToken, 0)
         }
     }
-
 }

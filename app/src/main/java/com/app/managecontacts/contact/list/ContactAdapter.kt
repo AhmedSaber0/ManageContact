@@ -1,4 +1,4 @@
-package com.app.managecontacts.contact
+package com.app.managecontacts.contact.list
 
 import android.view.LayoutInflater
 import android.view.View
@@ -12,8 +12,10 @@ import java.util.*
 class ContactAdapter : RecyclerView.Adapter<ContactAdapter.ContactViewHolder>() {
 
     private var data: List<ContactUi> = ArrayList()
+    lateinit var listener: OnItemClickListener
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactViewHolder {
+        setOnItemClickListener(listener)
         return ContactViewHolder(
             LayoutInflater.from(parent.context)
                 .inflate(
@@ -27,20 +29,37 @@ class ContactAdapter : RecyclerView.Adapter<ContactAdapter.ContactViewHolder>() 
     override fun getItemCount() = data.size
 
     override fun onBindViewHolder(holder: ContactViewHolder, position: Int) =
-        holder.bind(data[position])
+        holder.bind(data[position], listener)
 
     fun swapData(data: List<ContactUi>) {
         this.data = data
         notifyDataSetChanged()
     }
 
-    class ContactViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(item: ContactUi) = with(itemView) {
+    class ContactViewHolder(itemView: View) :
+        RecyclerView.ViewHolder(itemView) {
+        fun bind(item: ContactUi, listener: OnItemClickListener) = with(itemView) {
             nameTextView.text = item.name
             mobileTextView.text = item.mobile
             setOnClickListener {
-                // TODO: Handle on click
+                listener.onClick(
+                    it,
+                    item
+                )
             }
         }
     }
+
+    interface OnItemClickListener {
+        fun onClick(
+            view: View,
+            contact: ContactUi
+        )
+    }
+
+    fun setOnItemClickListener(listener: OnItemClickListener) {
+        this.listener = listener
+    }
+
+
 }

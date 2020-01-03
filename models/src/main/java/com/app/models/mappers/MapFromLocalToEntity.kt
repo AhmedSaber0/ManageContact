@@ -10,7 +10,7 @@ import com.app.models.EntityModel
 
 interface MapFromLocalToEntity<L, E : EntityModel> {
 
-    fun mapFromLocalToEntity(model: L): E
-    fun mapFromLocalToEntity(model: List<L>): List<E>
+    fun mapFromLocalToEntity(localModel: L): E
+    fun mapFromLocalToEntity(localModels: List<L>): List<E>
 
 }

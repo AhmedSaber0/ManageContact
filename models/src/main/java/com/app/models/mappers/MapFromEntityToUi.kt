@@ -9,6 +9,6 @@ import com.app.models.UiModel
  */
 
 interface MapFromEntityToUi<E, U : UiModel> {
-    fun mapToUiModel(model: E): U
-    fun mapToUiModelList(model: List<E>): List<U>
+    fun mapToUiModel(uiModel: E): U
+    fun mapToUiModelList(uiModels: List<E>): List<U>
 }
