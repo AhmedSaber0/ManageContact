@@ -1,5 +1,6 @@
 package com.app.local.contact
 
+import androidx.annotation.WorkerThread
 import com.app.local.utils.await
 import com.app.models.local.ContactLocal
 import io.realm.Realm
@@ -7,7 +8,7 @@ import io.realm.RealmResults
 
 
 class ContactDaoImpl(private val realm: Realm) : ContactDao {
-    override  fun addContact(contactLocal: ContactLocal) {
+    override suspend fun addContact(contactLocal: ContactLocal) {
         Realm.getDefaultInstance().executeTransactionAsync {
             it.insert(contactLocal)
         }
@@ -22,7 +23,7 @@ class ContactDaoImpl(private val realm: Realm) : ContactDao {
         }
     }
 
-    override suspend fun getAllContacts(): RealmResults<ContactLocal> {
-        return Realm.getDefaultInstance().where(ContactLocal::class.java).await()
+    override suspend fun getAllContacts(): List<ContactLocal> {
+        return realm.where(ContactLocal::class.java).await()
     }
 }

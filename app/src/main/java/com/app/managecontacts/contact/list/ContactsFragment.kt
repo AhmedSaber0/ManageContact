@@ -9,11 +9,12 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.app.contact.mapper.EntityContactMapper
 import com.app.contact.repository.ContactRepositoryImpl
-import com.app.contact.usecase.ContactUseCase
+import com.app.contact.usecase.ContactsUseCase
 import com.app.contactpresentation.ContactViewModel
 import com.app.contactpresentation.mapper.UiContactMapper
 import com.app.contactpresentation.uimodel.ContactUi
 import com.app.local.contact.ContactDaoImpl
+import com.app.local.contact.ContactLocalDataSource
 import com.app.managecontacts.databinding.FragmentContactsBinding
 import io.realm.Realm
 
@@ -33,11 +34,12 @@ class ContactsFragment : Fragment() {
         val uiMapper = UiContactMapper()
         val entityMapper = EntityContactMapper()
         val contactDao = ContactDaoImpl(Realm.getDefaultInstance())
-        val repository = ContactRepositoryImpl(contactDao)
-        val contactUseCase = ContactUseCase(repository, entityMapper)
+        val contactLocalDataSource = ContactLocalDataSource(contactDao)
+        val repository = ContactRepositoryImpl(contactLocalDataSource)
+        val contactUseCase = ContactsUseCase(repository, entityMapper)
         contactViewModel = ContactViewModel(contactUseCase, uiMapper)
 
-        contactViewModel.getAllContacts().observe(this, Observer {
+        contactViewModel.items.observe(this, Observer {
             contactAdapter.swapData(it)
         })
 
