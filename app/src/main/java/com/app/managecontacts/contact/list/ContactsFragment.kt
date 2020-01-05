@@ -31,6 +31,39 @@ class ContactsFragment : Fragment() {
         contactsBinding = FragmentContactsBinding.inflate(inflater, container, false)
 
         setupRecyclerView()
+        setupDependency()
+        setupFab()
+
+        // i don't prefer to use data binding just use view binding feature of it
+        setupLoadingDataObserver()
+        setupEmptyListObserver()
+
+        setupGetAllContactsObserver()
+
+        return contactsBinding.root
+    }
+
+    private fun setupEmptyListObserver() {
+        contactViewModel.emptyList.observe(this, Observer {
+            val visibleGone = if (it) View.VISIBLE else View.GONE
+            contactsBinding.mainLayout.noContactsTextView.visibility = visibleGone
+        })
+    }
+
+    private fun setupLoadingDataObserver() {
+        contactViewModel.dataLoading.observe(this, Observer {
+            val visibleGone = if (it) View.VISIBLE else View.GONE
+            contactsBinding.mainLayout.progressBar.visibility = visibleGone
+        })
+    }
+
+    private fun setupGetAllContactsObserver() {
+        contactViewModel.contacts.observe(this, Observer {
+            contactAdapter.swapData(it)
+        })
+    }
+
+    private fun setupDependency() {
         val uiMapper = UiContactMapper()
         val entityMapper = EntityContactMapper()
         val contactDao = ContactDaoImpl(Realm.getDefaultInstance())
@@ -38,19 +71,15 @@ class ContactsFragment : Fragment() {
         val repository = ContactRepositoryImpl(contactLocalDataSource)
         val contactUseCase = ContactsUseCase(repository, entityMapper)
         contactViewModel = ContactViewModel(contactUseCase, uiMapper)
+    }
 
-        contactViewModel.items.observe(this, Observer {
-            contactAdapter.swapData(it)
-        })
-
+    private fun setupFab() {
         contactsBinding.fab.setOnClickListener {
             val addContactAction =
                 ContactsFragmentDirections.actionContactsFragmentToAddContactFragment()
             findNavController().navigate(addContactAction)
         }
-        return contactsBinding.root
     }
-
 
     private fun setupRecyclerView() {
         contactAdapter = ContactAdapter()
@@ -64,7 +93,6 @@ class ContactsFragment : Fragment() {
                     )
                 findNavController().navigate(contactDetailsAction)
             }
-
         })
     }
 }

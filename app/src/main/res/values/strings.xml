@@ -7,4 +7,7 @@
     <string name="mobile_number_hint">Tele</string>
     <string name="name_hint">Name</string>
     <string name="telephone">Telephone</string>
+    <string name="empty_contact_list">Empty Contact List</string>
+    <string name="save">Save</string>
+
 </resources>

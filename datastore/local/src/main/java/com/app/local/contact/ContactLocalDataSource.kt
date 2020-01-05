@@ -2,7 +2,6 @@ package com.app.local.contact
 
 import com.app.local.utils.Result
 import com.app.models.local.ContactLocal
-import io.realm.RealmResults
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

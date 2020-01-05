@@ -4,7 +4,6 @@ import com.app.contact.entity.ContactEntity
 import com.app.contact.mapper.EntityContactMapper
 import com.app.contact.repository.ContactRepository
 import com.app.local.utils.Result
-import java.lang.Exception
 
 class ContactsUseCase constructor(
     private val contactRepository: ContactRepository,

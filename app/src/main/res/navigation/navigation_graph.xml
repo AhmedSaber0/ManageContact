@@ -29,7 +29,11 @@
         android:id="@+id/addContactFragment"
         android:name="com.app.managecontacts.contact.add.AddContactFragment"
         android:label="add_contact_fragment"
-        tools:layout="@layout/add_contact_fragment" />
+        tools:layout="@layout/add_contact_fragment">
+        <action
+            android:id="@+id/action_addContactFragment_to_contactsFragment"
+            app:destination="@id/contactsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/contactDetailsFragment"
         android:name="com.app.managecontacts.contact.details.ContactDetailsFragment"

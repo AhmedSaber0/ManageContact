@@ -1,7 +1,6 @@
 package com.app.local.contact
 
 import com.app.models.local.ContactLocal
-import io.realm.RealmResults
 
 interface ContactDao {
 

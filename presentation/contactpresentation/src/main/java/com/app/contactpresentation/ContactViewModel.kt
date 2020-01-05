@@ -12,47 +12,37 @@ class ContactViewModel constructor(
     private val mapperUi: UiContactMapper
 ) : ViewModel() {
 
-    private val _items = MutableLiveData<List<ContactUi>>().apply { value = emptyList() }
-    val items: LiveData<List<ContactUi>> = _items
+    private val _contacts = MutableLiveData<List<ContactUi>>().apply { value = emptyList() }
+    val contacts: LiveData<List<ContactUi>> = _contacts
 
     private val _dataLoading = MutableLiveData<Boolean>()
     val dataLoading: LiveData<Boolean> = _dataLoading
 
-    private val _noTasksLabel = MutableLiveData<Int>()
-    val noTasksLabel: LiveData<Int> = _noTasksLabel
+    private val _noContactLabel = MutableLiveData<Int>()
+    val noContactLabel: LiveData<Int> = _noContactLabel
 
-    // Not used at the moment
-    private val isDataLoadingError = MutableLiveData<Boolean>()
+    val emptyList: LiveData<Boolean> = Transformations.map(_contacts) {
+        it.isNullOrEmpty()
+    }
 
     init {
         getAllContacts()
     }
 
-    fun getAllContacts(){
+    private fun getAllContacts() {
         _dataLoading.value = true
 
         viewModelScope.launch {
             val tasksResult = contactsUseCase.getAllContacts()
             if (tasksResult is Result.Success) {
-                isDataLoadingError.value = false
-                _items.value = tasksResult.data.map {
+                _contacts.value = tasksResult.data.map {
                     mapperUi.mapToUiModel(it)
                 }
             } else {
-                isDataLoadingError.value = false
-                _items.value = emptyList()
+                _contacts.value = emptyList()
             }
 
             _dataLoading.value = false
         }
     }
-//
-//    fun getAllContacts(): LiveData<List<ContactUi>> {
-//        return liveData {
-//            val result = contactsUseCase.getAllContacts().map {
-//                mapperUi.mapToUiModel(it)
-//            }
-//            emit(result)
-//        }
-//    }
 }

@@ -3,20 +3,20 @@ package com.app.contactpresentation
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.app.contact.usecase.AddContactUseCase
-import com.app.contact.usecase.ContactsUseCase
 import com.app.models.local.ContactLocal
+import kotlinx.coroutines.launch
 
 class AddContactViewModel constructor(
     private val addContactUseCase: AddContactUseCase
 ) : ViewModel() {
 
-    private val _newTaskEvent = MutableLiveData<Event<Unit>>()
-    val newTaskEvent: LiveData<Event<Unit>> = _newTaskEvent
+    private val _newContactEvent = MutableLiveData<Event<Unit>>()
+    val newContactEvent: LiveData<Event<Unit>> = _newContactEvent
 
-    fun addContact(contactLocal: ContactLocal) {
-        _newTaskEvent.value = Event(Unit)
-
-//        addContactUseCase.addContact(contactLocal)
+    fun addContact(contactLocal: ContactLocal) = viewModelScope.launch {
+        addContactUseCase.addContact(contactLocal)
+        _newContactEvent.value = Event(Unit)
     }
 }
