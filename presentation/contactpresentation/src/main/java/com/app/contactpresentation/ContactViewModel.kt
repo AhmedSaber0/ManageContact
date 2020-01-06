@@ -2,6 +2,7 @@ package com.app.contactpresentation
 
 import androidx.lifecycle.*
 import com.app.contact.usecase.ContactsUseCase
+import com.app.contact.usecase.DeleteContactUseCase
 import com.app.contactpresentation.mapper.UiContactMapper
 import com.app.contactpresentation.uimodel.ContactUi
 import com.app.local.utils.Result
@@ -9,6 +10,7 @@ import kotlinx.coroutines.launch
 
 class ContactViewModel constructor(
     private val contactsUseCase: ContactsUseCase,
+    private val deleteContactUseCase: DeleteContactUseCase,
     private val mapperUi: UiContactMapper
 ) : ViewModel() {
 
@@ -17,9 +19,6 @@ class ContactViewModel constructor(
 
     private val _dataLoading = MutableLiveData<Boolean>()
     val dataLoading: LiveData<Boolean> = _dataLoading
-
-    private val _noContactLabel = MutableLiveData<Int>()
-    val noContactLabel: LiveData<Int> = _noContactLabel
 
     val emptyList: LiveData<Boolean> = Transformations.map(_contacts) {
         it.isNullOrEmpty()
@@ -44,5 +43,15 @@ class ContactViewModel constructor(
 
             _dataLoading.value = false
         }
+    }
+
+    fun deleteContact(mobile: String) {
+        viewModelScope.launch {
+            deleteContactUseCase.deleteContact(mobile)
+        }
+    }
+
+    fun refresh() {
+        getAllContacts()
     }
 }

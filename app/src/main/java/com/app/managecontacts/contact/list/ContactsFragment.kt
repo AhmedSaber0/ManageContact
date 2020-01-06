@@ -1,5 +1,7 @@
 package com.app.managecontacts.contact.list
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,22 +9,18 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import com.app.contact.mapper.EntityContactMapper
-import com.app.contact.repository.ContactRepositoryImpl
-import com.app.contact.usecase.ContactsUseCase
+import androidx.recyclerview.widget.DividerItemDecoration
 import com.app.contactpresentation.ContactViewModel
-import com.app.contactpresentation.mapper.UiContactMapper
 import com.app.contactpresentation.uimodel.ContactUi
-import com.app.local.contact.ContactDaoImpl
-import com.app.local.contact.ContactLocalDataSource
+import com.app.managecontacts.R
 import com.app.managecontacts.databinding.FragmentContactsBinding
-import io.realm.Realm
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ContactsFragment : Fragment() {
 
-    lateinit var contactsBinding: FragmentContactsBinding
-    lateinit var contactViewModel: ContactViewModel
-    lateinit var contactAdapter: ContactAdapter
+    private lateinit var contactsBinding: FragmentContactsBinding
+    private val contactViewModel: ContactViewModel by viewModel()
+    private lateinit var contactAdapter: ContactAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,10 +29,9 @@ class ContactsFragment : Fragment() {
         contactsBinding = FragmentContactsBinding.inflate(inflater, container, false)
 
         setupRecyclerView()
-        setupDependency()
         setupFab()
 
-        // i don't prefer to use data binding just use view binding feature of it
+        // i don't prefer to use data binding just use view binding
         setupLoadingDataObserver()
         setupEmptyListObserver()
 
@@ -63,16 +60,6 @@ class ContactsFragment : Fragment() {
         })
     }
 
-    private fun setupDependency() {
-        val uiMapper = UiContactMapper()
-        val entityMapper = EntityContactMapper()
-        val contactDao = ContactDaoImpl(Realm.getDefaultInstance())
-        val contactLocalDataSource = ContactLocalDataSource(contactDao)
-        val repository = ContactRepositoryImpl(contactLocalDataSource)
-        val contactUseCase = ContactsUseCase(repository, entityMapper)
-        contactViewModel = ContactViewModel(contactUseCase, uiMapper)
-    }
-
     private fun setupFab() {
         contactsBinding.fab.setOnClickListener {
             val addContactAction =
@@ -84,15 +71,45 @@ class ContactsFragment : Fragment() {
     private fun setupRecyclerView() {
         contactAdapter = ContactAdapter()
         contactsBinding.mainLayout.recyclerView.adapter = contactAdapter
-        contactAdapter.setOnItemClickListener(object : ContactAdapter.OnItemClickListener {
-            override fun onClick(view: View, contact: ContactUi) {
-                val contactDetailsAction =
-                    ContactsFragmentDirections.actionContactsFragmentToContactDetailsFragment(
-                        contact.name,
-                        contact.mobile
-                    )
-                findNavController().navigate(contactDetailsAction)
+        contactsBinding.mainLayout.recyclerView.addItemDecoration(
+            DividerItemDecoration(
+                activity,
+                DividerItemDecoration.VERTICAL
+            )
+        )
+        contactAdapter.setOnItemClickListener(object :
+            ContactAdapter.OnItemClickListener {
+            override fun onClick(
+                view: View,
+                contact: ContactUi,
+                position: Int
+            ) {
+                when (view.id) {
+                    R.id.rootLayout -> openContactDetails(contact)
+                    R.id.callImageView -> call(contact.mobile)
+                    R.id.deleteImageView -> deleteContact(contact, position)
+                }
             }
         })
+    }
+
+    private fun call(mobile: String) {
+        val intent = Intent(Intent.ACTION_DIAL)
+        intent.data = Uri.parse("tel:$mobile")
+        startActivity(intent)
+    }
+
+    private fun deleteContact(contact: ContactUi, position: Int) {
+        contactAdapter.removeItem(position)
+        contactViewModel.deleteContact(contact.mobile)
+    }
+
+    private fun openContactDetails(contact: ContactUi) {
+        val contactDetailsAction =
+            ContactsFragmentDirections.actionContactsFragmentToContactDetailsFragment(
+                contact.name,
+                contact.mobile
+            )
+        findNavController().navigate(contactDetailsAction)
     }
 }

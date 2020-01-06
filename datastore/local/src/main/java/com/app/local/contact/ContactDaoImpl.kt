@@ -5,25 +5,40 @@ import io.realm.Realm
 import io.realm.RealmResults
 
 
-class ContactDaoImpl(private val realm: Realm = Realm.getDefaultInstance()) : ContactDao {
-    override suspend fun addContact(contactLocal: ContactLocal) {
-        Realm.getDefaultInstance().executeTransaction {
-            it.insert(contactLocal)
+class ContactDaoImpl : ContactDao {
+    override suspend fun addContact(contactLocal: ContactLocal): Boolean {
+        val realm = Realm.getDefaultInstance()
+        realm.beginTransaction()
+        return if (contactExists(contactLocal.mobile))
+            false
+        else {
+            realm.insert(contactLocal)
+            realm.commitTransaction()
+            true
         }
     }
 
-    override suspend fun deleteContact(contactLocal: ContactLocal) {
+    private fun contactExists(mobile: String): Boolean {
+        return Realm.getDefaultInstance()
+            .where(ContactLocal::class.java)
+            .equalTo("mobile", mobile)
+            .findFirst() != null
+    }
+
+
+    override suspend fun deleteContact(mobile: String) {
         Realm.getDefaultInstance().executeTransactionAsync {
             val result: RealmResults<ContactLocal> =
-                it.where(ContactLocal::class.java).equalTo("mobile", contactLocal.mobile)
+                it.where(ContactLocal::class.java).equalTo("mobile", mobile)
                     .findAll()
             result.deleteAllFromRealm()
         }
     }
 
     override suspend fun getAllContacts(): List<ContactLocal> {
+        val realm = Realm.getDefaultInstance()
         val realmResults =
-            Realm.getDefaultInstance().where(ContactLocal::class.java).findAll()
-        return Realm.getDefaultInstance().copyFromRealm(realmResults)
+            realm.where(ContactLocal::class.java).findAll()
+        return realm.copyFromRealm(realmResults)
     }
 }

@@ -5,7 +5,7 @@ import com.app.models.local.ContactLocal
 
 interface ContactDataSource{
 
-    suspend fun addContact(contactLocal: ContactLocal)
-    suspend fun deleteContact(contactLocal: ContactLocal)
+    suspend fun addContact(contactLocal: ContactLocal): Boolean
+    suspend fun deleteContact(mobile: String)
     suspend fun getAllContacts(): Result<List<ContactLocal>>
 }

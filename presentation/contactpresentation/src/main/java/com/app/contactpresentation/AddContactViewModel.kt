@@ -12,11 +12,10 @@ class AddContactViewModel constructor(
     private val addContactUseCase: AddContactUseCase
 ) : ViewModel() {
 
-    private val _newContactEvent = MutableLiveData<Event<Unit>>()
-    val newContactEvent: LiveData<Event<Unit>> = _newContactEvent
+    private val _addContactErrorVisible = MutableLiveData<Boolean>()
+    val addContactErrorVisible: LiveData<Boolean> = _addContactErrorVisible
 
     fun addContact(contactLocal: ContactLocal) = viewModelScope.launch {
-        addContactUseCase.addContact(contactLocal)
-        _newContactEvent.value = Event(Unit)
+        _addContactErrorVisible.value = addContactUseCase.addContact(contactLocal)
     }
 }

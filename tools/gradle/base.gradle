@@ -46,12 +46,17 @@ dependencies {
     //koin
     implementation deps.koin.koinAndroid
     implementation deps.koin.koinViewModel
+    implementation deps.koin.koinCore
 
     // Log
     implementation deps.log.timber
 
-    api deps.kotlin.kotlin
-    api deps.kotlin.kotlinCore
+    // sdp
+    implementation deps.sdp.sdp
+    implementation deps.sdp.ssp
+
+    implementation deps.kotlin.kotlin
+    implementation deps.kotlin.kotlinCore
 
     // Testing
     testImplementation deps.test.junit

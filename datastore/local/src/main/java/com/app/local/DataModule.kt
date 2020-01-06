@@ -2,13 +2,16 @@ package com.app.local
 
 import com.app.local.contact.ContactDao
 import com.app.local.contact.ContactDaoImpl
-import io.realm.Realm
-import org.koin.core.module.Module
+import com.app.local.contact.ContactDataSource
+import com.app.local.contact.ContactLocalDataSource
+import kotlinx.coroutines.Dispatchers
 import org.koin.dsl.module
 
 val dataModule = module {
 
-    single { Realm.getDefaultInstance() }
+    single { Dispatchers.IO }
 
-    single { ContactDaoImpl(realm = get()) as ContactDao }
+    single { ContactDaoImpl() as ContactDao }
+
+    single { ContactLocalDataSource(contactDao = get(), ioDispatcher = get()) as ContactDataSource }
 }

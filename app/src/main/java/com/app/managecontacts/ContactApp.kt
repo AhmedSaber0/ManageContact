@@ -22,13 +22,12 @@ class ContactApp : Application() {
         super.onCreate()
         Realm.init(this)
 
-//        ContactModules.init()
         startKoin {
             androidLogger()
-//            androidContext(this@ContactApp)
-//            modules(
-//                listOf(presentationModule)
-//            )
+            androidContext(this@ContactApp)
+            modules(
+                listOf(dataModule, featureModule, presentationModule)
+            )
         }
     }
 }

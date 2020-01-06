@@ -5,10 +5,10 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation.findNavController
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
 import com.app.managecontacts.base.BaseActivity
-import com.app.managecontacts.databinding.ActivityMainBinding
-import kotlinx.android.synthetic.main.activity_main.*
+import com.app.managecontacts.databinding.ActivityContactsBinding
+import kotlinx.android.synthetic.main.activity_contacts.*
 
-class ContactsActivity : BaseActivity<ActivityMainBinding>() {
+class ContactsActivity : BaseActivity<ActivityContactsBinding>() {
 
     private lateinit var navController: NavController
 
@@ -21,7 +21,7 @@ class ContactsActivity : BaseActivity<ActivityMainBinding>() {
     }
 
     override fun getLayoutId(): Int {
-        return R.layout.activity_main
+        return R.layout.activity_contacts
     }
 
     override fun onSupportNavigateUp() =

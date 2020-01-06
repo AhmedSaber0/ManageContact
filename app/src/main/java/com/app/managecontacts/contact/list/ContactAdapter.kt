@@ -7,11 +7,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.app.contactpresentation.uimodel.ContactUi
 import com.app.managecontacts.R
 import kotlinx.android.synthetic.main.contact_row.view.*
-import java.util.*
 
 class ContactAdapter : RecyclerView.Adapter<ContactAdapter.ContactViewHolder>() {
 
-    private var data: List<ContactUi> = ArrayList()
+    private lateinit var contacts: MutableList<ContactUi>
     lateinit var listener: OnItemClickListener
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactViewHolder {
@@ -26,34 +25,65 @@ class ContactAdapter : RecyclerView.Adapter<ContactAdapter.ContactViewHolder>() 
         )
     }
 
-    override fun getItemCount() = data.size
+    override fun getItemCount() = if (::contacts.isInitialized) contacts.size else 0
 
     override fun onBindViewHolder(holder: ContactViewHolder, position: Int) =
-        holder.bind(data[position], listener)
+        holder.bind(contacts[position], listener, position)
 
-    fun swapData(data: List<ContactUi>) {
-        this.data = data
-        notifyDataSetChanged()
+    fun removeItem(position: Int) {
+        contacts.removeAt(position)
+        notifyItemRemoved(position)
+        notifyItemRangeChanged(position, contacts.size)
     }
 
-    class ContactViewHolder(itemView: View) :
-        RecyclerView.ViewHolder(itemView) {
-        fun bind(item: ContactUi, listener: OnItemClickListener) = with(itemView) {
-            nameTextView.text = item.name
-            mobileTextView.text = item.mobile
-            setOnClickListener {
-                listener.onClick(
-                    it,
-                    item
-                )
+    fun swapData(data: List<ContactUi>) {
+        if (data.isNotEmpty()) {
+            this.contacts = data as MutableList<ContactUi>
+            notifyDataSetChanged()
+        }
+    }
+
+    class ContactViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        fun bind(
+            item: ContactUi,
+            listener: OnItemClickListener,
+            position: Int
+        ) {
+            with(itemView) {
+                nameTextView.text = item.name
+                mobileTextView.text = item.mobile
+                contactIconImageView.text = item.name[0].toString()
+                callImageView.setOnClickListener {
+                    click(listener, it, item, position)
+                }
+                deleteImageView.setOnClickListener {
+                    click(listener, it, item, position)
+                }
+                rootLayout.setOnClickListener {
+                    click(listener, it, item, position)
+                }
             }
+        }
+
+        private fun click(
+            listener: OnItemClickListener,
+            it: View,
+            item: ContactUi,
+            position: Int
+        ) {
+            listener.onClick(
+                it,
+                item,
+                position
+            )
         }
     }
 
     interface OnItemClickListener {
         fun onClick(
             view: View,
-            contact: ContactUi
+            contact: ContactUi,
+            position: Int
         )
     }
 

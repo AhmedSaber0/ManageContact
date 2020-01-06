@@ -3,13 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-    </data>
+    <data />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:padding="@dimen/_16sdp"
         tools:context=".contact.add.AddContactFragment">
 
         <com.google.android.material.textfield.TextInputLayout
@@ -26,14 +25,18 @@
                 android:id="@+id/nameEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/name_hint" />
+                android:drawableStart="@drawable/profile_icon"
+                android:drawablePadding="@dimen/_16sdp"
+                android:hint="@string/name_hint"
+                android:inputType="textPersonName"
+                android:textSize="@dimen/_14ssp" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/mobileInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/_16sdp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -43,7 +46,11 @@
                 android:id="@+id/mobileEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/mobile_number_hint" />
+                android:drawableStart="@drawable/phone_icon"
+                android:drawablePadding="@dimen/_16sdp"
+                android:hint="@string/mobile_number_hint"
+                android:inputType="phone"
+                android:textSize="@dimen/_14ssp" />
         </com.google.android.material.textfield.TextInputLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

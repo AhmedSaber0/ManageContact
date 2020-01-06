@@ -8,15 +8,15 @@ class ContactRepositoryImpl constructor(
     private val contactDataSource: ContactDataSource
 ) : ContactRepository{
 
-    override suspend fun addContact(contactLocal: ContactLocal) {
-        contactDataSource.addContact(contactLocal)
+    override suspend fun addContact(contactLocal: ContactLocal): Boolean {
+        return contactDataSource.addContact(contactLocal)
     }
 
     override suspend fun getAllContacts(): Result<List<ContactLocal>> {
         return contactDataSource.getAllContacts()
     }
 
-    override suspend fun deleteContact(contactLocal: ContactLocal) {
-        contactDataSource.deleteContact(contactLocal)
+    override suspend fun deleteContact(mobile: String) {
+        contactDataSource.deleteContact(mobile)
     }
 }
